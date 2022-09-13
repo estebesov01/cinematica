@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from .models import Genre, Movie, MovieFormat, RoomFormat, Room, ShowTime, Cinema, FeedBack, Seat
 from .serializers import GenreSerializer, MovieSerializer, MovieFormatSerializer, RoomFormatSerializer, \
     CinemaSerializer, SeatSerializer, FeedBackSerializer, FeedBackListSerializer, RoomSerializer, RoomListSerializer, \
@@ -38,6 +38,20 @@ class RoomView(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         serializer = RoomListSerializer(Room.objects.all(), many=True)
         return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = RoomSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print(serializer.data)
+            seats = serializer.data['amount_of_seat']
+            rows = serializer.data['amount_of_row']
+            room_id = serializer.data['id']
+            print(seats, rows, room_id)
+            for i in range(1, seats + 1):
+                for j in range(1, rows + 1):
+                    Seat.objects.create(num_seat=i, num_row=j, room_id=room_id)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class RoomFormatView(viewsets.ModelViewSet):

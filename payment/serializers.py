@@ -76,7 +76,6 @@ class ClubCardSerializer(serializers.ModelSerializer):
         orders = Ticket.objects.filter(user=obj.user, is_ordered=True)
         balance = 0
         for i in orders:
-            print(i.price)
             balance += i.price * 0.03
         return balance
 

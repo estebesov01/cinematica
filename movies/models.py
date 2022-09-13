@@ -56,9 +56,13 @@ class Room(models.Model):
     name = models.CharField(max_length=128)
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
     format = models.ForeignKey(RoomFormat, on_delete=models.CASCADE)
+    amount_of_seat = models.PositiveSmallIntegerField(default=15)
+    amount_of_row = models.PositiveSmallIntegerField(default=8)
 
     def __str__(self):
         return self.name
+
+
 
 
 class ShowTime(models.Model):
